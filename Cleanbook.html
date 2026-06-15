@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0a1733">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Mattress Heroes · Clients</title>
+<style>
+:root{
+  --navy:#0a1733;        /* deep logo background */
+  --navy-2:#0d1d44;      /* card navy */
+  --navy-3:#10245a;      /* raised */
+  --steel:#5b86c4;       /* logo steel blue */
+  --steel-bright:#7fa8e0;
+  --ice:#cfe0f5;         /* light text */
+  --white:#f4f8ff;
+  --muted:#7f93bd;
+  --line:rgba(120,150,210,.18);
+  --line-hot:rgba(127,168,224,.55);
+  --shield:#e8f0ff;
+  --danger:#e0556b;
+  --ok:#4fc78a;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;background:var(--navy);color:var(--ice);
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  -webkit-user-select:none;user-select:none;overflow:hidden;}
+body{display:flex;flex-direction:column;
+  background:
+    radial-gradient(ellipse 90% 50% at 50% -8%,rgba(91,134,196,.22) 0%,transparent 65%),
+    var(--navy);}
+input,textarea{-webkit-user-select:text;user-select:text;}
+
+/* ── Header ── */
+#header{
+  padding:max(14px,env(safe-area-inset-top)) 18px 14px;
+  border-bottom:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(13,29,68,.9),rgba(10,23,51,.6));
+  backdrop-filter:blur(12px);
+  position:relative;z-index:10;
+}
+#brand{display:flex;align-items:center;gap:12px;}
+#shield{width:42px;height:42px;flex:none;}
+#brand-text h1{font-size:20px;font-weight:800;letter-spacing:.5px;color:var(--white);line-height:1;}
+#brand-text h1 .heroes{color:var(--steel-bright);}
+#brand-text p{font-size:10px;letter-spacing:2.5px;color:var(--muted);margin-top:4px;font-weight:600;}
+#count{margin-top:12px;font-size:12px;color:var(--muted);}
+#count b{color:var(--steel-bright);font-weight:700;}
+#count-row{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;}
+#backup-row{display:flex;gap:8px;margin-top:12px;}
+.bkp{padding:7px 12px;border-radius:10px;border:1px solid var(--line);
+  background:var(--navy-2);color:var(--steel-bright);font-size:12px;font-weight:700;
+  cursor:pointer;transition:transform .08s;}
+.bkp:active{transform:scale(.95);}
+
+/* ── Search ── */
+#search-wrap{padding:12px 18px 0;}
+#search{
+  width:100%;padding:13px 16px;font-size:15px;
+  background:var(--navy-2);border:1px solid var(--line);border-radius:14px;
+  color:var(--white);outline:none;transition:border-color .2s;
+}
+#search:focus{border-color:var(--line-hot);}
+#search::placeholder{color:var(--muted);}
+
+/* ── List ── */
+#list{flex:1;overflow-y:auto;padding:14px 18px 120px;-webkit-overflow-scrolling:touch;}
+.card{
+  background:linear-gradient(160deg,var(--navy-3),var(--navy-2));
+  border:1px solid var(--line);border-radius:18px;
+  padding:16px;margin-bottom:12px;
+  position:relative;overflow:hidden;
+}
+.card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--steel-bright),var(--steel));}
+.card-top{display:flex;align-items:center;gap:13px;margin-bottom:14px;}
+.avatar{
+  width:46px;height:46px;flex:none;border-radius:13px;
+  background:linear-gradient(150deg,var(--steel),#34518a);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:18px;color:var(--white);
+  box-shadow:0 2px 10px rgba(0,0,0,.3);
+}
+.card-name{flex:1;min-width:0;}
+.card-name .n{font-size:17px;font-weight:700;color:var(--white);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.card-name .a{font-size:13px;color:var(--muted);margin-top:2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.edit-btn{flex:none;width:34px;height:34px;border-radius:10px;border:1px solid var(--line);
+  background:transparent;color:var(--steel-bright);font-size:15px;cursor:pointer;}
+.card-actions{display:flex;gap:9px;}
+.act{
+  flex:1;padding:12px;border-radius:13px;border:none;cursor:pointer;
+  font-size:14px;font-weight:700;display:flex;align-items:center;
+  justify-content:center;gap:7px;transition:transform .08s,filter .15s;
+}
+.act:active{transform:scale(.96);}
+.act.nav{background:linear-gradient(135deg,var(--steel-bright),var(--steel));color:var(--navy);}
+.act.call{background:var(--navy-3);border:1px solid var(--line-hot);color:var(--steel-bright);}
+.act.call.off{opacity:.35;}
+.card-notes{margin-top:13px;padding-top:13px;border-top:1px solid var(--line);
+  font-size:13px;line-height:1.5;color:var(--ice);white-space:pre-wrap;word-break:break-word;}
+.card-notes .lbl{font-size:10px;letter-spacing:1.5px;color:var(--muted);
+  display:block;margin-bottom:5px;font-weight:700;}
+
+/* ── Empty ── */
+#empty{text-align:center;padding:70px 30px;color:var(--muted);display:none;}
+#empty svg{width:64px;height:64px;opacity:.5;margin-bottom:18px;}
+#empty h3{color:var(--ice);font-size:17px;margin-bottom:8px;}
+#empty p{font-size:14px;line-height:1.5;}
+
+/* ── FAB ── */
+#fab{
+  position:fixed;right:20px;bottom:calc(24px + env(safe-area-inset-bottom));
+  width:60px;height:60px;border-radius:20px;border:none;cursor:pointer;z-index:20;
+  background:linear-gradient(135deg,var(--steel-bright),var(--steel));
+  color:var(--navy);font-size:30px;font-weight:700;
+  box-shadow:0 8px 24px rgba(91,134,196,.45);
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .1s;
+}
+#fab:active{transform:scale(.92);}
+
+/* ── Sheet ── */
+#scrim{position:fixed;inset:0;background:rgba(4,9,22,.7);backdrop-filter:blur(3px);
+  z-index:30;opacity:0;pointer-events:none;transition:opacity .25s;}
+#scrim.on{opacity:1;pointer-events:auto;}
+#sheet{
+  position:fixed;left:0;right:0;bottom:0;z-index:40;
+  background:var(--navy-2);border-top:1px solid var(--line-hot);
+  border-radius:24px 24px 0 0;padding:8px 20px calc(24px + env(safe-area-inset-bottom));
+  transform:translateY(110%);transition:transform .3s cubic-bezier(.32,.72,0,1);
+  max-height:90vh;overflow-y:auto;
+}
+#sheet.on{transform:translateY(0);}
+.grab{width:40px;height:5px;border-radius:3px;background:var(--line-hot);margin:8px auto 18px;}
+#sheet h2{font-size:19px;color:var(--white);margin-bottom:18px;font-weight:800;}
+.field{margin-bottom:15px;}
+.field label{display:block;font-size:11px;letter-spacing:1.2px;color:var(--muted);
+  margin-bottom:7px;font-weight:700;}
+.field input,.field textarea{
+  width:100%;padding:13px 15px;font-size:16px;
+  background:var(--navy);border:1px solid var(--line);border-radius:13px;
+  color:var(--white);outline:none;font-family:inherit;transition:border-color .2s;
+}
+.field input:focus,.field textarea:focus{border-color:var(--line-hot);}
+.field textarea{min-height:80px;resize:vertical;line-height:1.5;}
+.pin-btn{width:100%;margin-top:10px;padding:13px;border-radius:13px;cursor:pointer;
+  font-size:15px;font-weight:700;border:1px solid var(--line-hot);
+  background:var(--navy-3);color:var(--steel-bright);transition:transform .08s;}
+.pin-btn:active{transform:scale(.97);}
+.pin-btn.done{background:linear-gradient(135deg,var(--ok),#2f9c68);border:none;color:var(--navy);}
+.pin-status{font-size:12px;color:var(--muted);margin-top:8px;text-align:center;min-height:16px;}
+.pin-status.ok{color:var(--ok);}
+.pin-status.err{color:var(--danger);}
+.notecount{font-size:11px;color:var(--muted);text-align:right;margin-top:5px;}
+.sheet-btns{display:flex;gap:11px;margin-top:8px;}
+.sbtn{flex:1;padding:15px;border-radius:14px;border:none;cursor:pointer;
+  font-size:15px;font-weight:700;transition:transform .08s;}
+.sbtn:active{transform:scale(.97);}
+.sbtn.save{background:linear-gradient(135deg,var(--steel-bright),var(--steel));color:var(--navy);}
+.sbtn.del{background:transparent;border:1px solid var(--danger);color:var(--danger);flex:none;width:54px;font-size:18px;}
+.sbtn.cancel{background:var(--navy-3);color:var(--ice);}
+
+/* ── Toast ── */
+#toast{position:fixed;left:50%;bottom:calc(100px + env(safe-area-inset-bottom));
+  transform:translateX(-50%) translateY(20px);background:var(--navy-3);
+  border:1px solid var(--line-hot);color:var(--white);padding:11px 20px;
+  border-radius:30px;font-size:14px;font-weight:600;z-index:60;opacity:0;
+  pointer-events:none;transition:opacity .25s,transform .25s;white-space:nowrap;}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
+
+::-webkit-scrollbar{width:0;}
+</style>
+</head>
+<body>
+
+<div id="header">
+  <div id="brand">
+    <svg id="shield" viewBox="0 0 100 100" fill="none">
+      <circle cx="50" cy="50" r="46" stroke="#5b86c4" stroke-width="3" opacity=".5"/>
+      <path d="M50 14 L82 26 V52 C82 72 68 82 50 88 C32 82 18 72 18 52 V26 Z"
+            fill="#10245a" stroke="#7fa8e0" stroke-width="2.5"/>
+      <path d="M58 36 H44 C40 36 38 39 40 43 L48 50 C42 52 40 55 42 60 L56 64 C60 65 62 62 60 58 L52 51 C58 49 60 46 58 42 Z"
+            fill="#e8f0ff"/>
+    </svg>
+    <div id="brand-text">
+      <h1>MATTRESS <span class="heroes">HEROES</span></h1>
+      <p>CLIENT BOOK</p>
+    </div>
+  </div>
+  <div id="count-row">
+    <div id="count"><b id="cnum">0</b> clients saved</div>
+    <div id="backup-row">
+      <button class="bkp" onclick="exportData()">⬆ Backup</button>
+      <button class="bkp" onclick="$('import-file').click()">⬇ Restore</button>
+      <input type="file" id="import-file" accept=".json,application/json" style="display:none" onchange="importData(event)">
+    </div>
+  </div>
+</div>
+
+<div id="search-wrap">
+  <input id="search" placeholder="Search name, address or notes…" oninput="render()">
+</div>
+
+<div id="list"></div>
+
+<div id="empty">
+  <svg viewBox="0 0 24 24" fill="none" stroke="#7f93bd" stroke-width="1.5">
+    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+    <circle cx="12" cy="10" r="3"/>
+  </svg>
+  <h3>No clients yet</h3>
+  <p>Tap the + button to add your first one.<br>Their address and number stay saved on this phone.</p>
+</div>
+
+<button id="fab" onclick="openSheet()">+</button>
+
+<div id="scrim" onclick="closeSheet()"></div>
+<div id="sheet">
+  <div class="grab"></div>
+  <h2 id="sheet-title">Add client</h2>
+  <input type="hidden" id="f-id">
+  <div class="field">
+    <label>NAME</label>
+    <input id="f-name" placeholder="e.g. Mrs Dolan">
+  </div>
+  <div class="field">
+    <label>LOCATION</label>
+    <input id="f-addr" placeholder="Address (optional)">
+    <button class="pin-btn" id="pin-btn" onclick="pinHere()">📍 Pin my GPS spot now</button>
+    <div class="pin-status" id="pin-status"></div>
+    <input type="hidden" id="f-lat"><input type="hidden" id="f-lng">
+  </div>
+  <div class="field">
+    <label>PHONE</label>
+    <input id="f-phone" type="tel" placeholder="07700 800672">
+  </div>
+  <div class="field">
+    <label>NOTES</label>
+    <textarea id="f-notes" maxlength="600" oninput="updNoteCount()"
+      placeholder="Job details, gate code, parking, pets…"></textarea>
+    <div class="notecount"><span id="nc">0</span>/600</div>
+  </div>
+  <div class="sheet-btns">
+    <button class="sbtn del" id="del-btn" onclick="delClient()" style="display:none">🗑</button>
+    <button class="sbtn cancel" onclick="closeSheet()">Cancel</button>
+    <button class="sbtn save" onclick="saveClient()">Save</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const $ = id => document.getElementById(id);
+const STORE = 'mh-clients-v1';
+let clients = [];
+let editId = null;
+
+// ── Load ──
+try { clients = JSON.parse(localStorage.getItem(STORE)) || []; }
+catch(e){ clients = []; }
+
+function save(){ localStorage.setItem(STORE, JSON.stringify(clients)); }
+
+function toast(msg){
+  const t = $('toast'); t.textContent = msg; t.classList.add('on');
+  clearTimeout(t._t); t._t = setTimeout(()=>t.classList.remove('on'), 1800);
+}
+
+function initials(name){
+  const p = name.trim().split(/\s+/);
+  return ((p[0]?.[0]||'') + (p[1]?.[0]||'')).toUpperCase() || '?';
+}
+function esc(s){ return (s||'').replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+// ── Render ──
+function render(){
+  const q = $('search').value.trim().toLowerCase();
+  const list = $('list');
+  const sorted = [...clients].sort((a,b)=>a.name.localeCompare(b.name));
+  const shown = q ? sorted.filter(c =>
+    (c.name+' '+c.address+' '+(c.notes||'')).toLowerCase().includes(q)) : sorted;
+
+  $('cnum').textContent = clients.length;
+  $('empty').style.display = clients.length===0 ? 'block':'none';
+
+  if(clients.length && shown.length===0){
+    list.innerHTML = '<div style="text-align:center;color:#7f93bd;padding:40px;font-size:14px">No match for "'+esc(q)+'"</div>';
+    return;
+  }
+
+  list.innerHTML = shown.map(c=>{
+    const hasPhone = c.phone && c.phone.trim();
+    const tel = (c.phone||'').replace(/[^\d+]/g,'');
+    const pinned = c.lat != null && c.lng != null;
+    const where = pinned ? '📍 GPS pin saved' : (esc(c.address)||'No location');
+    const navArg = pinned ? `gps:${c.lat},${c.lng}` : `addr:${esc(c.address).replace(/'/g,"\\'")}`;
+    return `<div class="card">
+      <div class="card-top">
+        <div class="avatar">${initials(c.name)}</div>
+        <div class="card-name">
+          <div class="n">${esc(c.name)}</div>
+          <div class="a">${where}</div>
+        </div>
+        <button class="edit-btn" onclick="openSheet('${c.id}')">✎</button>
+      </div>
+      <div class="card-actions">
+        <button class="act nav" onclick="navTo('${navArg}')">📍 Directions</button>
+        <button class="act call ${hasPhone?'':'off'}" ${hasPhone?`onclick="location.href='tel:${tel}'"`:'disabled'}>📞 Call</button>
+      </div>
+      ${c.notes ? `<div class="card-notes"><span class="lbl">NOTES</span>${esc(c.notes)}</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+// ── Apple Maps directions (GPS pin or typed address) ──
+function navTo(arg){
+  let daddr, fallback;
+  if(arg.startsWith('gps:')){
+    const ll = arg.slice(4);                 // "lat,lng"
+    daddr = ll;
+    location.href = `maps://?daddr=${ll}&dirflg=d`;
+    fallback = `https://maps.apple.com/?daddr=${ll}&dirflg=d`;
+  } else {
+    const addr = arg.slice(5);
+    if(!addr){ toast('No location saved'); return; }
+    const enc = encodeURIComponent(addr);
+    location.href = `maps://?daddr=${enc}&dirflg=d`;
+    fallback = `https://maps.apple.com/?daddr=${enc}&dirflg=d`;
+  }
+  setTimeout(()=>{ window.open(fallback,'_blank'); }, 600);
+}
+
+// ── Capture current GPS ──
+function pinHere(){
+  const btn = $('pin-btn'), st = $('pin-status');
+  if(!navigator.geolocation){ st.textContent='GPS not available on this device'; st.className='pin-status err'; return; }
+  st.textContent='Getting your location…'; st.className='pin-status';
+  btn.textContent='📡 Locating…';
+  navigator.geolocation.getCurrentPosition(
+    pos=>{
+      $('f-lat').value = pos.coords.latitude.toFixed(6);
+      $('f-lng').value = pos.coords.longitude.toFixed(6);
+      btn.textContent='✓ GPS spot pinned'; btn.classList.add('done');
+      st.textContent=`Saved: ${$('f-lat').value}, ${$('f-lng').value}`; st.className='pin-status ok';
+    },
+    err=>{
+      btn.textContent='📍 Pin my GPS spot now';
+      st.className='pin-status err';
+      st.textContent = err.code===1
+        ? 'Location blocked — allow location for this site in Settings'
+        : 'Couldn\'t get a fix — try again outside';
+    },
+    { enableHighAccuracy:true, timeout:12000, maximumAge:0 }
+  );
+}
+
+// ── Sheet ──
+function openSheet(id){
+  editId = id || null;
+  const btn = $('pin-btn'), st = $('pin-status');
+  btn.textContent='📍 Pin my GPS spot now'; btn.classList.remove('done');
+  st.textContent=''; st.className='pin-status';
+  if(editId){
+    const c = clients.find(x=>x.id===editId);
+    $('sheet-title').textContent = 'Edit client';
+    $('f-name').value = c.name; $('f-addr').value = c.address;
+    $('f-phone').value = c.phone||''; $('f-notes').value = c.notes||'';
+    $('f-lat').value = c.lat!=null ? c.lat : '';
+    $('f-lng').value = c.lng!=null ? c.lng : '';
+    if(c.lat!=null){
+      btn.textContent='✓ GPS spot pinned'; btn.classList.add('done');
+      st.textContent='Re-pin to update'; st.className='pin-status ok';
+    }
+    $('del-btn').style.display = 'block';
+  } else {
+    $('sheet-title').textContent = 'Add client';
+    $('f-name').value=''; $('f-addr').value=''; $('f-phone').value=''; $('f-notes').value='';
+    $('f-lat').value=''; $('f-lng').value='';
+    $('del-btn').style.display = 'none';
+  }
+  updNoteCount();
+  $('scrim').classList.add('on'); $('sheet').classList.add('on');
+}
+function closeSheet(){ $('scrim').classList.remove('on'); $('sheet').classList.remove('on'); }
+function updNoteCount(){ $('nc').textContent = $('f-notes').value.length; }
+
+function saveClient(){
+  const name = $('f-name').value.trim();
+  if(!name){ toast('Add a name first'); $('f-name').focus(); return; }
+  const lat = $('f-lat').value, lng = $('f-lng').value;
+  const obj = {
+    name, address:$('f-addr').value.trim(),
+    phone:$('f-phone').value.trim(), notes:$('f-notes').value.trim(),
+    lat: lat!=='' ? parseFloat(lat) : null,
+    lng: lng!=='' ? parseFloat(lng) : null
+  };
+  if(editId){
+    const c = clients.find(x=>x.id===editId); Object.assign(c,obj);
+    toast('Saved');
+  } else {
+    obj.id = Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+    clients.push(obj); toast('Client added');
+  }
+  save(); render(); closeSheet();
+}
+
+function delClient(){
+  if(!editId) return;
+  const c = clients.find(x=>x.id===editId);
+  if(confirm(`Delete ${c.name}? This can't be undone.`)){
+    clients = clients.filter(x=>x.id!==editId);
+    save(); render(); closeSheet(); toast('Deleted');
+  }
+}
+
+// ── Backup / Restore ──
+function exportData(){
+  if(!clients.length){ toast('No clients to back up yet'); return; }
+  const stamp = new Date().toISOString().slice(0,10);
+  const blob = new Blob([JSON.stringify(clients,null,2)],{type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `mattress-heroes-clients-${stamp}.json`;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url), 1000);
+  toast(`Backed up ${clients.length} clients`);
+}
+
+function importData(ev){
+  const file = ev.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e=>{
+    try{
+      const data = JSON.parse(e.target.result);
+      if(!Array.isArray(data)) throw 0;
+      const clean = data.filter(c=>c && c.name).map(c=>({
+        id: c.id || Date.now().toString(36)+Math.random().toString(36).slice(2,6),
+        name:String(c.name), address:String(c.address||''),
+        phone:String(c.phone||''), notes:String(c.notes||''),
+        lat: c.lat!=null ? Number(c.lat) : null,
+        lng: c.lng!=null ? Number(c.lng) : null
+      }));
+      if(!clean.length){ toast('No clients found in that file'); return; }
+      const map = {};
+      clients.forEach(c=>map[c.id]=c);
+      clean.forEach(c=>map[c.id]=c);
+      clients = Object.values(map);
+      save(); render();
+      toast(`Restored — ${clients.length} clients total`);
+    }catch(err){ toast('That file isn\'t a valid backup'); }
+    ev.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
+render();
+</script>
+</body>
+</html>
